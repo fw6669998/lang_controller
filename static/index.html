@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>自然语言控制器</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="./asset/bootstrap.css">
+    <link rel="stylesheet" href="./css/base.css"/>
+    <script async src="https://hm.baidu.com/hm.js?85fad12bb9a6dab448f4eff0a19299a5"></script>
+    <!-- Custom Styles -->
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #chat-container {
+            width: 60%;
+            height: 100vh; /* Keep the height full screen */
+            display: flex;
+            flex-direction: column;
+        }
+
+        #chat-box {
+            flex: 1;
+            overflow-y: scroll;
+            padding: 20px;
+        }
+
+        #input-box {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        @media screen and (orientation: portrait) {
+            #chat-container {
+                width: 100%; /* Set chat container width to 100% in portrait mode */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="chat-container" class="bg-light">
+    <div class="alert alert-primary mb-0">
+        <h4 class="text-center">自然语言控制器</h4>
+    </div>
+    <div id="chat-box" class="bg-light">
+        <!-- Chat messages will be displayed here class="form-control" -->
+    </div>
+    <div id="input-box" class="bg-light">
+        <div class="input-group mb-3">
+            <button id="start-btn"></button>
+            <input type="text" id="message-input" class="form-control" placeholder="输入指令..."
+                   onkeydown="if (event.key === 'Enter') sendMessage()">
+            <div class="input-group-append">
+                <button class="btn btn-primary" onclick="sendMessage()">发送</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="fixed-box" id="fixed-box">
+    <div class="fixed-main">
+        <button class="fixed-close" id="close-btn"></button>
+        <div id="fixed-txt">Hello! 请说出你想说话。。。！</div>
+        <div class="fixed-icon">
+            <img src="./img/voice.png" alt=""/>
+        </div>
+    </div>
+</section>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="./asset/jquery-3.3.1.slim.js"></script>
+<script src="./asset/bootstrap.js"></script>
+<script src="./js/crypto-js.min.js"></script>
+<script src="./js/voice.js"></script>
+<script src="./asset/popper.js"></script>
+
+<script>
+    window.onload = function () {
+
+        const messageInput = document.querySelector('#message-input');
+        const startBtn = document.querySelector('#start-btn');
+        const fixedBox = document.querySelector('#fixed-box');
+        const fixedTxt = document.querySelector('#fixed-txt');
+        const closeBtn = document.querySelector('#close-btn');
+        let times = null;
+
+        const voice = new Voice({
+            appId: '5ec244d5',
+            apiSecret: '37912e3e3f205e2a6201ec290452470a',
+            apiKey: '78b6c006f1f3df5e24d315e3dff09212',
+            onWillStatusChange: function (oldStatus, newStatus) {
+                fixedBox.style.display = 'block';
+            },
+            onTextChange: function (text) {
+                messageInput.innerText = text;
+                messageInput.value = text;
+                fixedTxt.innerText = text;
+                if (text) {
+                    clearTimeout(times);
+                    times = setTimeout(() => {
+                        this.stop();
+                        fixedBox.style.display = 'none';
+                    }, 3000);
+                }
+                ;
+            }
+        });
+
+        startBtn['onclick'] = function () {
+            voice.start();
+        };
+
+        closeBtn['onclick'] = function () {
+            voice.stop();
+            fixedBox.style.display = 'none';
+        };
+    };
+
+    function sendMessage() {
+        // Get the message from the input
+        var message = document.getElementById('message-input').value;
+
+        // Clear the input field
+        document.getElementById('message-input').value = '';
+
+        // Create a new message element
+        var messageElement = document.createElement('div');
+        messageElement.className = 'alert alert-info mb-2';
+        messageElement.innerHTML = '<strong>You:</strong> ' + message;
+
+        // Append the message element to the chat box
+        document.getElementById('chat-box').appendChild(messageElement);
+
+        // Scroll to the bottom of the chat box
+        document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
+
+        // Send the message to the server
+        const formData = new URLSearchParams();
+        formData.append('cmd', message);
+        fetch('/cmd', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formData
+            // body: JSON.stringify({
+            //     cmd: message
+            // })
+        }).then(function (response) {
+            return response.json();
+        }).then(function (response) {
+            // Create a new message element
+            var messageElement = document.createElement('div');
+            messageElement.className = 'alert alert-success mb-2';
+            var rspMsg = '<strong>Bot:</strong><ul>';
+            rspMsg += '<li>命令:  ' + response.srcCmd + '</li>';
+            rspMsg += '<li>设备:  ' + response.deviceName + '</li>';
+            rspMsg += '<li>操作类型:    ' + response.typeText + '</li>';
+            if (response.type === 'setProperty' || response.type === 'invokeService') {
+                rspMsg += '<li>功能名称:    ' + response.identifier + '(' + response.identifierText + ')</li>';    //属性服务名
+                rspMsg += '<li>参数:  ' + response.arg + '</li>';
+                rspMsg += '<li>执行结果:  ' + response.iotExecRes + '</li>';
+                if (response.cmdAttention) {
+                    rspMsg += '<li style="color: red">请注意:  ' + response.cmdAttention + '</li>';
+                }
+                // rspMsg += '<li>操作结果:  ' + response.iotExecRes.sysMsg + '</li>';
+            }
+            if (response.type === 'askProperty') {
+                rspMsg += '<li>属性名称:    ' + response.identifier + '(' + response.identifierText + ')</li>';    //属性服务名
+                rspMsg += '<li>值: ' + response['askText'] + '</li>';
+            }
+            rspMsg += '<ul/>';
+            // messageElement.innerHTML = '<strong>Bot:</strong> ' + response;
+            messageElement.innerHTML = rspMsg;
+            // Append the message element to the chat box
+            document.getElementById('chat-box').appendChild(messageElement);
+            // Scroll to the bottom of the chat box
+            document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
+        });
+    }
+</script>
+
+</body>
+</html>

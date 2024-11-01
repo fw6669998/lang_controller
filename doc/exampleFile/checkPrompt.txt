@@ -1,0 +1,4 @@
+根据功能描述和设备当前状态值判断判断指令是否能正确执行,如果能返回yes, 否则返回原因,
+功能描述: {"dataSpecsList": [{"custom": true, "dataType": "ENUM", "name": "自动", "value": 1}, {"custom": true, "dataType": "ENUM", "name": "单步", "value": 2}], "dataType": "ENUM", "description": "小车只有在远程模式下才能设置该属性", "identifier": "agv_runmode", "name": "运行模型_自动单步", "rwFlag": "READ_WRITE"}
+设备当前状态: [{"name": "电池电量(百分比)", "identifier": "agv_electrical", "value": "21", "unit": null}, {"name": "小车状态", "identifier": "agv_status", "value": "0", "unit": ""}, {"name": "运行模型_自动单步", "identifier": "agv_runmode", "value": "1", "unit": ""}, {"name": "调度模式", "identifier": "agv_mode", "value": "0", "unit": ""}, {"name": "信号质量", "identifier": "agv_signal", "value": "\"servingcell\",\"SEARCH\"\r\n\r\nOK\r\n", "unit": null}]
+指令: {"identifier": "agv_runmode", "arg": 2, "type": "setProperty", "cmdAttention": "", "typeText": "设置属性"}

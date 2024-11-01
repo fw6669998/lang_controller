@@ -1,0 +1,248 @@
+{
+  "_ppk": {},
+  "events": [],
+  "productKey": "iy4uZ0wl6MA",
+  "properties": [
+    {
+      "createTs": 1730353366199,
+      "custom": true,
+      "customFlag": true,
+      "dataSpecsList": [
+        {
+          "dataType": "ENUM",
+          "name": "停车点1",
+          "value": 1
+        },
+        {
+          "dataType": "ENUM",
+          "name": "停车点2",
+          "value": 2
+        },
+        {
+          "dataType": "ENUM",
+          "name": "停车点3",
+          "value": 3
+        },
+        {
+          "dataType": "ENUM",
+          "name": "未在停车点上",
+          "value": 0
+        }
+      ],
+      "dataType": "ENUM",
+      "enableStorage": true,
+      "identifier": "stop_position",
+      "name": "当前在哪个停车点",
+      "productKey": "iy4uZ0wl6MA",
+      "required": false,
+      "rwFlag": "READ_ONLY",
+      "std": false
+    },
+    {
+      "createTs": 1730353480079,
+      "custom": true,
+      "customFlag": true,
+      "dataSpecs": {
+        "dataType": "INT",
+        "max": "10",
+        "min": "0",
+        "step": "1",
+        "unit": "km/h",
+        "unitName": "千米每小时"
+      },
+      "dataType": "INT",
+      "enableStorage": true,
+      "identifier": "speed",
+      "name": "速度",
+      "productKey": "iy4uZ0wl6MA",
+      "required": false,
+      "rwFlag": "READ_WRITE",
+      "std": false
+    },
+    {
+      "createTs": 1730353778968,
+      "custom": true,
+      "customFlag": true,
+      "dataSpecsList": [
+        {
+          "dataType": "BOOL",
+          "name": "没有",
+          "value": 0
+        },
+        {
+          "dataType": "BOOL",
+          "name": "有",
+          "value": 1
+        }
+      ],
+      "dataType": "BOOL",
+      "enableStorage": true,
+      "identifier": "have_block",
+      "name": "前方是否有障碍物",
+      "productKey": "iy4uZ0wl6MA",
+      "required": false,
+      "rwFlag": "READ_ONLY",
+      "std": false
+    },
+    {
+      "createTs": 1730355905563,
+      "custom": true,
+      "customFlag": true,
+      "dataSpecs": {
+        "dataType": "INT",
+        "max": "100",
+        "min": "0",
+        "step": "1",
+        "unit": "%",
+        "unitName": "百分比"
+      },
+      "dataType": "INT",
+      "enableStorage": true,
+      "identifier": "power",
+      "name": "当前电量",
+      "productKey": "iy4uZ0wl6MA",
+      "required": false,
+      "rwFlag": "READ_ONLY",
+      "std": false
+    },
+    {
+      "createTs": 1730356887124,
+      "custom": true,
+      "customFlag": true,
+      "dataSpecsList": [
+        {
+          "dataType": "BOOL",
+          "name": "关",
+          "value": 0
+        },
+        {
+          "dataType": "BOOL",
+          "name": "开",
+          "value": 1
+        }
+      ],
+      "dataType": "BOOL",
+      "enableStorage": true,
+      "identifier": "front_led",
+      "name": "前照灯",
+      "productKey": "iy4uZ0wl6MA",
+      "required": false,
+      "rwFlag": "READ_WRITE",
+      "std": false
+    },
+    {
+      "createTs": 1730356981268,
+      "custom": true,
+      "customFlag": true,
+      "dataSpecsList": [
+        {
+          "dataType": "BOOL",
+          "name": "关",
+          "value": 0
+        },
+        {
+          "dataType": "BOOL",
+          "name": "开",
+          "value": 1
+        }
+      ],
+      "dataType": "BOOL",
+      "enableStorage": true,
+      "identifier": "led_backend",
+      "name": "后照灯",
+      "productKey": "iy4uZ0wl6MA",
+      "required": false,
+      "rwFlag": "READ_WRITE",
+      "std": false
+    }
+  ],
+  "services": [
+    {
+      "callType": "ASYNC",
+      "createTs": 1730353171729,
+      "custom": true,
+      "description": "当前方有障碍物不能执行前进命令",
+      "enableStorage": true,
+      "identifier": "move",
+      "inputParams": [
+        {
+          "custom": true,
+          "dataSpecsList": [
+            {
+              "dataType": "ENUM",
+              "name": "停止",
+              "value": 0
+            },
+            {
+              "dataType": "ENUM",
+              "name": "前进",
+              "value": 1
+            },
+            {
+              "dataType": "ENUM",
+              "name": "后退",
+              "value": 2
+            },
+            {
+              "dataType": "ENUM",
+              "name": "左转",
+              "value": 3
+            },
+            {
+              "dataType": "ENUM",
+              "name": "右转",
+              "value": 4
+            }
+          ],
+          "dataType": "ENUM",
+          "direction": "PARAM_INPUT",
+          "identifier": "direct",
+          "name": "方向",
+          "paraOrder": 0
+        }
+      ],
+      "outputParams": [],
+      "productKey": "iy4uZ0wl6MA",
+      "required": false,
+      "serviceName": "自由移动"
+    },
+    {
+      "callType": "ASYNC",
+      "createTs": 1730353651534,
+      "custom": true,
+      "enableStorage": true,
+      "identifier": "move_position",
+      "inputParams": [
+        {
+          "custom": true,
+          "dataSpecsList": [
+            {
+              "dataType": "ENUM",
+              "name": "停车点1",
+              "value": 1
+            },
+            {
+              "dataType": "ENUM",
+              "name": "停车点2",
+              "value": 2
+            },
+            {
+              "dataType": "ENUM",
+              "name": "停车点3",
+              "value": 3
+            }
+          ],
+          "dataType": "ENUM",
+          "direction": "PARAM_INPUT",
+          "identifier": "stop_position",
+          "name": "停车点",
+          "paraOrder": 0
+        }
+      ],
+      "outputParams": [],
+      "productKey": "iy4uZ0wl6MA",
+      "required": false,
+      "serviceName": "移动到指定停车点"
+    }
+  ]
+}

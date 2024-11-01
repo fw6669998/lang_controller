@@ -1,0 +1,17 @@
+根据自然语言指令A和物模型数据B生成JSON指令C,仅返回指令C的JSON数据,不要返回其他内容.
+指令C格式={\"identifier\":x,\"arg\":y, \"type\":z}.
+z的取值为invokeService,setProperty,askProperty,根据指令和匹配到identifier判断
+
+以下是假设数据的生成示例:
+物模型数据: {"properties":[{"dataSpecsList":[{"dataType":"BOOL","name":"关","value":0},{"dataType":"BOOL","name":"开","value":1}],"identifier":"front_led","name":"前照灯"}],"services":[{"identifier":"move","inputParams":[{"custom":true,"dataSpecsList":[{"dataType":"ENUM","name":"停止","value":0},{"dataType":"ENUM","name":"前进","value":1}],"dataType":"ENUM","identifier":"direct","name":"方向","paraOrder":0}],"outputParams":[],"productKey":"iy4uZ0wl6MA","required":false,"serviceName":"自由移动"}]}
+当指令A为: 小车1前进
+返回内容为: {"identifier":"move","arg":{"direct":1},"type":"invokeService"}
+当指令A为: 小车1开启前照灯
+返回内容为: {"identifier": "front_led","arg": 1,"type": "setProperty"}
+当指令A为: 小车1前照灯状态
+返回内容为: {"identifier": "front_led","arg": "","type": "askProperty"}
+
+以下是实际数据, 请根据该数据生成结果
+物模型数据B: {{thingModelStr}}
+指令A: {{cmd}}
+返回内容为:
